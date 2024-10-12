@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb:10.5
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    volumes:
+      - db_data:/var/lib/mysql
+    env_file:
+      - .env
+    container_name: nextcloud_db
+
+  app:
+    image: nextcloud
+    ports:
+      - "8080:80"
+    links:
+      - db
+    volumes:
+      - ./data:/var/www/html/data
+      - ./nextcloud:/var/www/html
+      #- "/media/vicky/HDD 2.5 1TB/DCIM:/var/www/html/data/thevickypedia/files/HDD:ro"
+    env_file:
+      - .env
+    restart: always
+    container_name: nextcloud_server
+
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - redis_data:/data
+    container_name: nextcloud_redis_server
+
+volumes:
+  db_data:
+  nextcloud:
+  redis_data:
