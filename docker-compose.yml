@@ -25,6 +25,12 @@ services:
       - .env
     restart: always
     container_name: nextcloud_server
+    deploy:
+      # 'reservations' key is supported only in swarm mode
+      resources:
+        limits:
+          cpus: '2'   # Set to 2 cores
+          memory: 10G # Set to 10 GB
 
   redis:
     image: redis:alpine
